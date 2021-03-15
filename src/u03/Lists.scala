@@ -72,6 +72,17 @@ object Lists {
       case _: Student => false
       case _ => true
     })(e => e.asInstanceOf[Teacher].course)
+
+    @tailrec
+    def foldLeft[A](l: List[A])(initial: A)(op: (A, A) => A): A = l match {
+      case Cons(head, tail) => foldLeft(tail)(op(initial, head))(op)
+      case _ => initial
+    }
+
+    def foldRight[A](l: List[A])(initial: A)(op: (A, A) => A): A = l match {
+      case Cons(head, tail) => op(head, foldRight(tail)(initial)(op))
+      case _ => initial
+    }
   }
 }
 
@@ -98,4 +109,8 @@ object ListsMain extends App {
 
   val personList: List[Person] = Cons(Student("mario", 2012), Cons(Teacher("Viroli", "PPS"), Cons(Teacher("Ricci", "PCD"), Nil())))
   println(coursesByTeachers(personList))
+
+  val lst = Cons(3,Cons(7,Cons(1,Cons(5, Nil()))))
+  println(foldLeft(lst)(0)(_-_)) // -16
+  println(foldRight(lst)(0)(_-_)) // -8
 }
