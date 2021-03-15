@@ -1,5 +1,7 @@
 package u03
 
+import scala.annotation.tailrec
+
 object Lists {
 
   // A generic linkedlist
@@ -30,6 +32,13 @@ object Lists {
       case Cons(_,t) => filter(t)(pred)
       case Nil() => Nil()
     }
+
+    @tailrec
+    def drop[A](l: List[A], n: Int): List[A] = l match {
+      case Cons(_, tail) if n > 0 => drop(tail, n - 1)
+      case Cons(head, tail) => Cons(head, tail)
+      case _ => Nil()
+    }
   }
 }
 
@@ -41,4 +50,8 @@ object ListsMain extends App {
   import u03.Lists.List
   println(append(Cons(5, Nil()), l)) // 5,10,20,30
   println(filter[Int](l)(_ >=20)) // 20,30
+
+  println(drop(l, 1)) // 20,30
+  println(drop(l, 2)) // 30
+  println(drop(l, 3)) // Nil()
 }
