@@ -2,6 +2,7 @@ package u03
 
 import scala.annotation.tailrec
 import u02.Optionals._
+import u02.SumTypes.{Person, Student, Teacher}
 
 object Lists {
 
@@ -66,6 +67,11 @@ object Lists {
         case Nil() => Option.None()
       }
     }
+
+    def coursesByTeachers(l: List[Person]): List[String] = map(filter(l) {
+      case _: Student => false
+      case _ => true
+    })(e => e.asInstanceOf[Teacher].course)
   }
 }
 
@@ -89,4 +95,7 @@ object ListsMain extends App {
 
   println(max(l))
   println(max(Nil[Int]()))
+
+  val personList: List[Person] = Cons(Student("mario", 2012), Cons(Teacher("Viroli", "PPS"), Cons(Teacher("Ricci", "PCD"), Nil())))
+  println(coursesByTeachers(personList))
 }
